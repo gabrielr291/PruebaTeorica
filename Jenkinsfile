@@ -60,12 +60,13 @@ pipeline {
 				 bat 'mvn jacoco:prepare-agent test jacoco:report' // Comando para generar el informe de jacoco con Maven
 			}
 		}
-	post {
-       		 always {
-	            // Archivar los informes de cobertura
-            		jacoco(execPattern: '**/target/jacoco.exec')
-            		jacoco(classPattern: '**/target/classes', sourcePattern: 'src/main/java')
+		
+		post {
+       		always {
+				// Archivar los informes de cobertura
+				jacoco(execPattern: '**/target/jacoco.exec')
+            	jacoco(classPattern: '**/target/classes', sourcePattern: 'src/main/java')
         	}
     	}
-}
+	}
 }
