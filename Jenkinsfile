@@ -1,3 +1,8 @@
+properties([
+    pipelineTriggers([
+        [$class: 'ErrorTrigger']
+    ])
+])
 pipeline {
     agent any
     
@@ -60,6 +65,17 @@ pipeline {
 				 bat 'mvn jacoco:prepare-agent test jacoco:report' // Comando para generar el informe de jacoco con Maven
 			}
 		}
+		stage('Notification') {
+			steps {
+			// Notificar por correo electrónico
+			emailext (
+            subject: 'Error en el pipeline de Jenkins',
+            body: 'Se ha detectado un error en el pipeline de Jenkins. Por favor, revisa el registro de Jenkins para obtener más detalles.',
+            to: 'gabriel.omar.r29@gmail.com',
+            recipientProviders: [[$class: 'DevelopersRecipientProvider']]
+        )
+    }
+}
 	}
 	post {
        	always {
