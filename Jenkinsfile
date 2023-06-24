@@ -57,14 +57,15 @@ pipeline {
 		stage('Coverage Report') {
 			steps {
 			// Paso para generar el informe de cobertura
-				bat 'mvn cobertura:cobertura'  // Comando para generar el informe de cobertura con Maven en Windows
-			}
-			post {
-				always {
-				// Archivar el informe de cobertura generado
-				cobertura autoUpdateHealth: false, autoUpdateStability: false, coberturaReportFile: 'target/site/cobertura/coverage.xml'
-				}
+				 bat 'mvn jacoco:prepare-agent test jacoco:report' // Comando para generar el informe de jacoco con Maven
 			}
 		}
-	}
+	post {
+       		 always {
+	            // Archivar los informes de cobertura
+            		jacoco(execPattern: '**/target/jacoco.exec')
+            		jacoco(classPattern: '**/target/classes', sourcePattern: 'src/main/java')
+        	}
+    	}
+}
 }
