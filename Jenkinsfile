@@ -3,8 +3,8 @@ pipeline {
     
     tools {
         //Que herramientas queremos utilizar 
-        maven "Maven3"
-        jdk "Java11"
+        maven "Maven"
+        jdk "Java 11"
     }
 
     environment {
