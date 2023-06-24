@@ -43,7 +43,6 @@ pipeline {
                 success{
                     echo 'Archivar Artefactos'
                     archiveArtifacts "target/*.jar"
-                    archiveArtifacts "web/target/*.war"
                 }
             }
         }
