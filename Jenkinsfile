@@ -42,7 +42,7 @@ pipeline {
             post{
                 success{
                     echo 'Archivar Artefactos'
-                    archiveArtifacts "core/target/*.jar"
+                    archiveArtifacts "target/*.jar"
                     archiveArtifacts "web/target/*.war"
                 }
             }
