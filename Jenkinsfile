@@ -53,15 +53,17 @@ pipeline {
                 //sh "mvn test"
             }
         }
+		
 		stage('Coverage Report') {
 			steps {
 			// Paso para generar el informe de cobertura
 				bat 'mvn cobertura:cobertura'  // Comando para generar el informe de cobertura con Maven en Windows
 			}
-		post {
-			always {
+			post {
+				always {
 				// Archivar el informe de cobertura generado
 				cobertura autoUpdateHealth: false, autoUpdateStability: false, coberturaReportFile: 'target/site/cobertura/coverage.xml'
+				}
 			}
 		}
 	}
