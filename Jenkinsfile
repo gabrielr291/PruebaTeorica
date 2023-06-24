@@ -54,7 +54,7 @@ pipeline {
         
         stage('test maven'){
             steps{
-               f bat "mvn test"
+               	bat "mvn test"
                 // sh "mvn test"
             }
         }
