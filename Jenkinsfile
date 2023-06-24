@@ -1,13 +1,13 @@
 properties([
     pipelineTriggers([
-        [$class: 'ErrorTrigger']
+        [$class: 'GitHubPushTrigger']
     ])
 ])
 pipeline {
     agent any
     
     tools {
-        //Que herramientas queremos utilizar 
+        // Que herramientas queremos utilizar 
         maven "Maven"
         jdk "Java 11"
     }
@@ -31,7 +31,7 @@ pipeline {
         
         stage('Git Polling'){
             steps{
-                //git branch: 'main', url: 'https://github.com/gabrielr291/PruebaTeorica'
+                // git branch: 'main', url: 'https://github.com/gabrielr291/PruebaTeorica'
                 git branch: 'main', credentialsId: 'GitHubKey', url: 'git@github.com:gabrielr291/PruebaTeorica.git'
                 
             }
@@ -39,9 +39,9 @@ pipeline {
         
         stage('BUILD CON MAVEN'){
             steps{
-               bat "mvn clean package -DskipTests" //windows
+               bat "mvn clean package -DskipTests" // windows
                
-               // sh "mvn -Dmaven.test.failure.ignore=true clean package " //Unix
+               // sh "mvn -Dmaven.test.failure.ignore=true clean package " // Unix
             }
             
             post{
@@ -55,34 +55,35 @@ pipeline {
         stage('test maven'){
             steps{
                 bat "mvn test"
-                //sh "mvn test"
+                // sh "mvn test"
             }
         }
 		
 		stage('Coverage Report') {
 			steps {
-			// Paso para generar el informe de cobertura
-				 bat 'mvn jacoco:prepare-agent test jacoco:report' // Comando para generar el informe de jacoco con Maven
+				// Paso para generar el informe de cobertura
+				bat 'mvn jacoco:prepare-agent test jacoco:report' // Comando para generar el informe de jacoco con Maven
 			}
 		}
+		
 		stage('Notification') {
 			steps {
-			// Notificar por correo electrónico
-			emailext (
-            subject: 'Error en el pipeline de Jenkins',
-            body: 'Se ha detectado un error en el pipeline de Jenkins. Por favor, revisa el registro de Jenkins para obtener más detalles.',
-            to: 'gabriel.omar.r29@gmail.com',
-            recipientProviders: [[$class: 'DevelopersRecipientProvider']]
-        )
+				// Notificar por correo electrónico
+				emailext (
+					subject: 'Error en el pipeline de Jenkins',
+					body: 'Se ha detectado un error en el pipeline de Jenkins. Por favor, revisa el registro de Jenkins para obtener más detalles.',
+					to: 'gabriel.omar.r29@gmail.com',
+					recipientProviders: [[$class: 'DevelopersRecipientProvider']]
+				)
+			}
+		}
     }
-}
-	}
-	post {
-       	always {
-			// Archivar los informes de cobertura
-			jacoco(execPattern: '**/target/jacoco.exec')
-           	jacoco(classPattern: '**/target/classes', sourcePattern: 'src/main/java')
+    
+    post {
+        always {
+            // Archivar los informes de cobertura
+            jacoco(execPattern: '**/target/jacoco.exec')
+            jacoco(classPattern: '**/target/classes', sourcePattern: 'src/main/java')
         }
     }
-	
 }
